@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -49,5 +50,20 @@ public class FornecedorResource {
 				.buildAndExpand(savedFornecedor.getId()).toUri();
 
 		return ResponseEntity.created(location).build();
+	}
+	
+	@PutMapping("/fornecedores/{id}")
+	public ResponseEntity<Object> updateFornecedor(@RequestBody Fornecedor fornecedor, @PathVariable long id) {
+
+		Optional<Fornecedor> fornecedorOptional = fr.findById(id);
+
+		if (!fornecedorOptional.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		fornecedor.setId(id);		
+		fr.save(fornecedor);
+
+		return ResponseEntity.noContent().build();
 	}
 }
